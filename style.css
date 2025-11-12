@@ -1,0 +1,286 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Body */
+body {
+  background-color: #0b0c10;
+  color: #fff;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: #0d1117;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #f8c20f;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #f8c20f;
+}
+
+/* Main Section */
+main {
+  text-align: center;
+  padding: 80px 40px;
+}
+
+/* Welcome Section */
+.welcome-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+              url('tailor-bg.jpg') center/cover no-repeat;
+  padding: 120px 20px;
+  border-radius: 10px;
+}
+
+.welcome-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #f8c20f;
+}
+
+.welcome-section p {
+  font-size: 1.1rem;
+  color: #dcdcdc;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Quick Actions Section */
+.quick-actions {
+  margin-top: 80px;
+}
+
+.quick-actions h3 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: #f8c20f;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.button {
+  background-color: #f8c20f;
+  color: #000;
+  padding: 14px 30px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: #e5b109;
+  transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+  background-color: #0d1117;
+  color: #bbb;
+  text-align: center;
+  padding: 20px;
+  margin-top: 80px;
+  font-size: 0.9rem;
+}
+
+
+/*service page*/
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 15px 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.logo {
+    font-weight:50;
+    color: #1c1c1c;
+}
+
+/* Main container */
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Header section */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.header-section h2 {
+    margin: 0;
+    color: #1c1c1c;
+}
+
+.header-section p {
+    margin: 0;
+    color: #1c1c1c;
+}
+
+.new-order-btn {
+    background: #325fa7;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.new-order-btn:hover {
+    background: #1b3a70;
+}
+
+/* Search bar */
+.search-bar {
+    margin: 20px 0;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+/* Ensure all table data is clearly visible */
+table, th, td {
+    color: #000 !important;   /* Force black text for all table cells */
+}
+
+/* Optional: also apply for dynamic text loaded from database */
+tr, td, th, span, a {
+    color: #000 !important;
+}
+
+/* Keep the "View Details" link blue for visibility */
+td a {
+    color: #004aad !important;
+}
+
+/* Status colors stay distinct */
+.status.completed {
+    color: #fff !important;
+    background-color: #162d53 !important;
+}
+
+.status.in-progress {
+    color: #5c4c2b !important;
+    background-color: #e7e2d8 !important;
+}
+
+.status.pending {
+    color: #333 !important;
+    background-color: #f7f7f7 !important;
+    border: 1px solid #ddd;
+}
+/* Table */
+table {
+    width: 100%;
+    border-collapse: 1px solid #201f1f;
+}
+
+th, td {
+    text-align: left;
+    padding: 14px 10px;
+}
+
+th {
+    background: #a2aff1;
+    font-weight: 600;
+    border-bottom: 2px solid #ece7e7;
+}
+
+tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Links */
+td a {
+    color: #004aad;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Status badges */
+.status {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.completed {
+    background-color: #162d53;
+    color: white;
+}
+
+.in-progress {
+    background-color: #e7e2d8;
+    color: #5c4c2b;
+}
+
+.pending {
+    background-color: #f7f7f7;
+    color: #333;
+    border: 1px solid #ddd;
+}
