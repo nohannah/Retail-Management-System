@@ -1,27 +1,62 @@
-<?php
-// Sample customer data (you can later replace this with database results)
-$customers = [
-    ["id" => "CUST001", "name" => "John Smith", "age" => 30, "gender" => "Male", "email" => "smith@gmail.com", "contact" => "01712345678", "address" => "New York", "status" => "Completed"],
-    ["id" => "CUST002", "name" => "Sarah Johnson", "age" => 25, "gender" => "Female", "email" => "sarah@gmail.com", "contact" => "01898765432", "address" => "Los Angeles", "status" => "In Progress"],
-    ["id" => "CUST003", "name" => "Michael Brown", "age" => 35, "gender" => "Male", "email" => "brown@gmail.com", "contact" => "01655555555", "address" => "Chicago", "status" => "Pending"],
-];
+<?php 
+include('db_con.php'); 
 
-// Handle new customer form submission
+// ✅ Fetch existing customers from the database
+$query = "
+    SELECT 
+        c.CustomerID, 
+        c.Name, 
+        c.Age, 
+        c.Gender, 
+        c.Email, 
+        c.ContactNo, 
+        c.Address,
+        o.OrderStatus
+    FROM customer AS c
+    LEFT JOIN `order` AS o 
+        ON c.CustomerID = o.CustomerID
+        AND o.OrderID = (
+            SELECT MAX(o2.OrderID)
+            FROM `order` AS o2
+            WHERE o2.CustomerID = c.CustomerID
+        )
+    ORDER BY c.CustomerID ASC
+";
+$result = mysqli_query($connection, $query);
+$customers = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// ✅ Handle new customer form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $newCustomer = [
-        "id" => $_POST['id'] ?? '',
-        "name" => $_POST['name'] ?? '',
-        "age" => $_POST['age'] ?? '',
-        "gender" => $_POST['gender'] ?? '',
-        "email" => $_POST['email'] ?? '',
-        "contact" => $_POST['contact'] ?? '',
-        "address" => $_POST['address'] ?? '',
-        "status" => $_POST['status'] ?? 'Pending',
-    ];
+    $CustomerID = $_POST['id'];
+    $Name = $_POST['name'];
+    $Age = $_POST['age'];
+    $Gender = $_POST['gender'];
+    $Email = $_POST['email'];
+    $Contact = $_POST['contact'];
+    $Address = $_POST['address'];
+    $Status = $_POST['status'];
 
-    // Add new customer to array
-    $customers[] = $newCustomer;
+    $insert = "INSERT INTO customer (CustomerID, Name, Age, Gender, Email, ContactNo, Address)
+               VALUES ('$CustomerID', '$Name', '$Age', '$Gender', '$Email', '$Contact', '$Address')";
+    $insertCustomerResult = mysqli_query($connection, $insert);
+    if ($insertCustomerResult) {
+        // Redirect to refresh page and avoid re-submission
+        $insertOrder = "
+        INSERT INTO `order` (CustomerID, OrderStatus)
+        VALUES ('$CustomerID', '$Status')
+    ";
+    $insertOrderResult = mysqli_query($connection, $insertOrder);
+    } 
+    if ($insertOrderResult) {
+        echo "<script>alert('Customer and Order added successfully!');</script>";
+    } else {
+        echo "<script>alert('Order insert failed: " . mysqli_error($connection) . "');</script>";
+    }
 }
+else{
+    echo "<script>alert('Customer insert failed: " . mysqli_error($connection) . "');</script>";
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -35,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-<header class="navbar bg-dark p-3">
-    <button class="btn btn-outline-secondary" onclick="history.back()">← Back</button>
+<header class="navbar bg-dark p-3 text-white">
+    <button class="btn btn-outline-light" onclick="history.back()">← Back</button>
     <h3 class="ms-3">✂️ TailorPro - Customer Management</h3>
 </header>
 
@@ -56,20 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="row g-3">
                     <div class="col-md-2">
                         <label class="form-label">Customer ID</label>
-                        <input type="text" name="id" class="form-control" placeholder="CUST006" required>
+                        <input type="text" name="CustomerID" class="form-control" placeholder="CUST006" required>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="Customer Name" required>
+                        <input type="text" name="Name" class="form-control" placeholder="Customer Name" required>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Age</label>
-                        <input type="number" name="age" class="form-control" placeholder="Age" required>
+                        <input type="number" name="Age" class="form-control" placeholder="Age" required>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Gender</label>
-                        <select name="gender" class="form-select" required>
-                            <option value="">Select</option>
+                        <select name="Gender" class="form-select" required>
+                            <option value="">Gender</option>
                             <option>Male</option>
                             <option>Female</option>
                             <option>Other</option>
@@ -81,15 +116,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Contact</label>
-                        <input type="text" name="contact" class="form-control" placeholder="Phone number" required>
+                        <input type="text" name="Contact" class="form-control" placeholder="Phone number" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Address</label>
-                        <input type="text" name="address" class="form-control" placeholder="Address" required>
+                        <input type="text" name="Address" class="form-control" placeholder="Address" required>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Status</label>
-                        <select name="status" class="form-select">
+                        <select name="OrderStatus" class="form-select">
                             <option value="Pending">Pending</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
@@ -104,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- 🧍 Customer Table -->
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped bg-white">
         <thead class="table-light">
             <tr>
                 <th>ID</th>
@@ -119,19 +154,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </thead>
         <tbody>
             <?php foreach ($customers as $c): ?>
-                 <?php 
+                <?php 
                     // convert status to css class like "status-completed"
                     $statusClass = strtolower(str_replace(' ', '-', $c['status']));
                 ?>
                 <tr>
-                    <td><?= htmlspecialchars($c['id']); ?></td>
-                    <td><?= htmlspecialchars($c['name']); ?></td>
-                    <td><?= htmlspecialchars($c['age']); ?></td>
-                    <td><?= htmlspecialchars($c['gender']); ?></td>
-                    <td><?= htmlspecialchars($c['email']); ?></td>
-                    <td><?= htmlspecialchars($c['contact']); ?></td>
-                    <td><?= htmlspecialchars($c['address']); ?></td>
-                    <td><span class="status <?= $statusClass; ?>"><?= htmlspecialchars($c['status']); ?></span></td>
+                    <td><?= htmlspecialchars($c['CustomerID']); ?></td>
+                    <td><?= htmlspecialchars($c['Name']); ?></td>
+                    <td><?= htmlspecialchars($c['Age']); ?></td>
+                    <td><?= htmlspecialchars($c['Gender']); ?></td>
+                    <td><?= htmlspecialchars($c['Email']); ?></td>
+                    <td><?= htmlspecialchars($c['ContactNo']); ?></td>
+                    <td><?= htmlspecialchars($c['Address']); ?></td>
+                    <td><span class="status <?= $statusClass; ?>"><?= htmlspecialchars($c['OrderStatus']); ?></span></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
